@@ -1,10 +1,10 @@
 # Lista de todas las functions
 vehicular:
-  handler: src/siniestro/controller/App.handler
+  handler: src/talleres/App.handler
   events:
     - http:
-        path: /siniestros
-        method: get
+        path: /deducible
+        method: post
         integration: lambda
         authorizer: ${self:custom.authorizer}
         cors:
@@ -15,6 +15,6 @@ vehicular:
               tipo: true
               valor: true
           template:
-            application/json: ${file(config/serverless/request/buscarSiniestro.vm)}
+            application/json: ${file(config/serverless/request/deducible.vm)}
         response:
           ${file(config/serverless/http-response.yaml)}

@@ -11,9 +11,7 @@
   "license": "Copyright (c) Rimac Seguros S.A.",
   "dependencies": {
     "@rimac/common": "1.9.1",
-    "@rimac/core": "1.9.6",
-    "@rimac/data-repository": "1.8.0",
-    "joi": "17.4.2"
+    "@rimac/core": "1.9.6"
   },
   "devDependencies": {
     "aws-sdk": "2.656.0",
@@ -23,6 +21,23 @@
     "serverless-esbuild": "~1.20.0",
     "serverless-offline": "~5.12.0",
     "serverless-plugin-lambda-insights": "~1.0.10",
-    "esbuild": "0.14.2"
+    "esbuild": "0.14.2",
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4",
+    "eslint": "7.0.0",
+    "eslint-config-airbnb-base": "14.1.0",
+    "eslint-plugin-import": "2.20.2",
+    "eslint-plugin-jest": "23.10.0",
+    "husky": "4.2.5"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }
