@@ -1,0 +1,20 @@
+{
+  "name": "arq-rimac-template-impl",
+  "version": "1.0.0",
+  "description": "api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "(node ./node_modules/@rimac/api-to-cloud/lib/aws_openapi_parser.js openapi_extension_cloud_aws.yaml)",
+    "build-mock": "(node ./node_modules/@rimac/api-to-cloud/lib/aws_openapi_parser.js openapi_extension_cloud_mock_aws.yaml)"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@rimac/api-to-cloud": "2.4.5",
+    "@rimac/serverless-cft-openapi": "^1.0.0"
+  },
+  "devDependencies": {
+    "@redocly/openapi-cli": "0.12.7"
+  }
+}

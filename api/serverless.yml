@@ -1,0 +1,67 @@
+#nombre del Stack del API
+service: ${self:custom.regions.abrev.${opt:stage}}API${opt:stage}ARQIMPLV1
+custom:
+  regions:
+    code: ${file(../config/serverless/common-custom-config.yaml):regions.code}
+    abrev:
+      DESA: UE2
+      TEST: UE2
+      PROD: UE1
+  environments: ${file(../config/serverless/common-custom-config.yaml):environments}
+  accountId: ${file(../config/serverless/common-custom-config.yaml):accountId}
+  apiName: ${self:custom.regions.abrev.${opt:stage}}API${opt:stage}ARQIMPLV1
+  deploymentBucket: ${file(../config/serverless/common-custom-config.yaml):deploymentBucket}
+  enableLog:
+    DESA: true
+    TEST: true
+    PROD: true
+  ApiGatewayCloudWatchRoleArn: arn:aws:iam::${self:custom.accountId}:role/Rol_ApiGateway
+  enableXray:
+    DESA: true
+    TEST: true
+    PROD: true
+  customAccessLogging:
+    DESA:
+      enabled: true
+      destinationArn: arn:aws:logs:us-east-2:477542548955:log-group:aws-apigateway/APIOBS_UE2_CH_APIARQUETIPO_DESA
+      accessLogFormat: ../config/serverless/accessLogFormat.json
+    TEST:
+      enabled: true
+      destinationArn: arn:aws:logs:us-east-2:477542548955:log-group:aws-apigateway/APIOBS_UE2_CH_APIARQUETIPO_TEST
+      accessLogFormat: ../config/serverless/accessLogFormat.json
+    PROD:
+      enabled: true
+      destinationArn: arn:aws:logs:us-east-1:477542548955:log-group:aws-apigateway/APIOBS_UE1_CH_APIARQUETIPO_PROD
+      accessLogFormat: ../config/serverless/accessLogFormat.json
+provider:
+  name: aws
+  stage: ${file(./node_modules/@rimac/api-to-cloud/lib/sls-helper.js):originalStage}
+  region: ${self:custom.regions.code.${opt:stage}}
+  deploymentBucket:
+    name: ${self:custom.deploymentBucket.${opt:stage}}
+    serverSideEncryption: AES256
+plugins:
+  - '@rimac/serverless-cft-openapi'  
+resources:
+  - Resources:
+      ApiGatewayRestApi:
+        Type: AWS::ApiGateway::RestApi
+        Properties:
+          Name: ${self:custom.apiName}
+          Body: ${file(openapi.json)}
+          Parameters:
+            endpointConfigurationTypes: REGIONAL
+  - ${file(./node_modules/@rimac/api-to-cloud/lib/aws_resources_custom_agregator.js):getApiCustomResources}
+  - Outputs:
+      apiGatewayRestApiId:
+        Value:
+          Ref: ApiGatewayRestApi
+        Export:
+          Name: ${self:custom.apiName}-restApiId
+      apiGatewayRestApiRootResourceId:
+        Value:
+          Fn::GetAtt:
+            - ApiGatewayRestApi
+            - RootResourceId
+        Export:
+          Name: ${self:custom.apiName}-rootResourceId

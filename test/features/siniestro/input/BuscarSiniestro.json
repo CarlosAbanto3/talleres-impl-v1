@@ -1,0 +1,37 @@
+{
+    "origin": "API_GATEWAY_REST_EVENT",
+    "action": "buscarSiniestro",
+    "body": "",
+    "headers": {},
+    "query": {},
+    "path": {},
+    "accountId": "$context.accountId",
+    "apiId": "$context.apiId",
+    "authorizer": {
+        "principalId": "$context.authorizer.principalId",
+        "claims": {},
+        "context": {}
+    },
+    "awsEndpointRequestId": "$context.awsEndpointRequestId",
+    "domainName": "$context.domainName",
+    "domainPrefix": "$context.domainPrefix",
+    "error": {},
+    "extendedRequestId": "$context.extendedRequestId",
+    "httpMethod": "$context.httpMethod",
+    "identity": {
+        "apiKey": "$context.identity.apiKey",
+        "apiKeyId": "$context.identity.apiKeyId"
+    },
+    "stageVariables": {},
+    "requestPath": "$context.path",
+    "protocol": "$context.protocol",
+    "requestId": "$context.requestId",
+    "requestTime": "$context.requestTime",
+    "requestTimeEpoch": "$context.requestTimeEpoch",
+    "resourceId": "$context.resourceId",
+    "resourcePath": "$context.resourcePath",
+    "stage": "$context.stage",
+    "wafResponseCode": "$context.wafResponseCode",
+    "webaclArn": "$context.webaclArn",
+    "xrayTraceId": "$context.xrayTraceId"
+}

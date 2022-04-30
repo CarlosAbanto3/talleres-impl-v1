@@ -1,0 +1,12 @@
+# Lista de todas las functions
+vehicular:
+  handler: src/siniestro/controller/App.handler
+  name: ${self:custom.regions.abrev.${opt:stage}}COM${opt:stage}ARQIMPLV1
+  description: SERVICIO DE SINIESTROS - ARQUETIPO PARA IMPLEMENTACIÓN
+  package:
+    include:
+      - node_modules/@rimac
+      - node_modules/object-mapper
+      - node_modules/jsonpath-plus
+  layers:
+    - arn:aws:lambda:${self:provider.region}:${self:custom.accountId}:layer:ARCHITECTURE-ARCHETYPE-${self:custom.archLayer.env.${opt:stage}}-LYR-COMPLETE:${self:custom.archLayer.ver.${opt:stage}}
