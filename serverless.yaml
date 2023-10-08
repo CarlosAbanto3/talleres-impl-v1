@@ -1,0 +1,93 @@
+service: ${self:custom.serviceName}
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${opt:stage,'DESA'}
+  region: ${self:custom.regions.code.${opt:stage}}
+  timeout: 60
+  memorySize: 2048
+  versionFunctions: false
+  logRetentionInDays: 3
+  role: ${self:custom.role.${opt:stage}}
+  tracing:
+    lambda: true
+  deploymentBucket:
+    name: ${self:custom.deploymentBucket.${opt:stage}}
+    serverSideEncryption: AES256
+  tags: # Tags para  los lambdas
+    NAME:  ${self:custom.regions.abrev.${opt:stage}}COM${opt:stage}ARQIMPLV1
+    ENTORNO: DESA
+    AMBIENTE: ${self:provider.stage}
+    PROYECTO: TRIBU TI
+    RESPONSABLE: JUAN LOPEZ ALEMAN
+    CMDB: SI
+  stackTags: # tags para CloudFormation
+    NAME:  ${self:custom.regions.abrev.${opt:stage}}COM${opt:stage}ARQIMPLV1
+    ENTORNO: DESA
+    AMBIENTE: ${self:provider.stage}
+    PROYECTO: TRIBU TI
+    RESPONSABLE: JUAN LOPEZ ALEMAN
+    CMDB: SI
+  vpc: ${self:custom.vpc.${opt:stage}}
+  environment:
+    NODE_OPTIONS: '--enable-source-maps'
+    TZ: "America/Lima"
+    LOG_LEVEL: 'INFO'
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+
+    # ACSELX
+    AX_CLOUD_CREDENTIALS: ${self:custom.axCloudCredentials}
+
+    # DYNAMO
+    DYNAMODB_TABLE_EQUIVALENCES: ${self:custom.regions.abrev.${opt:stage}}${opt:stage}CONFCANALAPIS
+  # Aplica solo para Arquitectura ARM64, puede ser obviado esta linea si no levanta su proyecto
+  # architecture: arm64
+
+custom:
+  lambdaInsights:
+    defaultLambdaInsights: true
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+
+  functionsFile: ${opt:functionsFile, 'cloud'}
+  role: ${file(./config/serverless/common-custom-config.yaml):role}
+  vpc: ${file(./config/serverless/common-custom-config.yaml):vpc}
+  deploymentBucket: ${file(./config/serverless/common-custom-config.yaml):deploymentBucket}
+  accountId: ${file(./config/serverless/common-custom-config.yaml):accountId}
+  #nombre del Stack del Lambda
+  name: ARQ-RIMAC-TEMPLATE-IMPL
+  serviceName: ${self:custom.name}-ACF-01
+
+  authorizer: ${file(./config/serverless/sls-helper.js):authorizer}
+
+  ssmRootPath: /${self:custom.name}/${self:provider.stage}
+
+  axCloudCredentials: ssm:${self:custom.ssmRootPath}/CREDENTIALS/DATABASE/AX-CLOUD
+
+  regions:
+    code: ${file(./config/serverless/common-custom-config.yaml):regions.code}
+    abrev: ${file(./config/serverless/common-custom-config.yaml):regions.abrev}
+
+  archLayer:
+    env: ${file(./config/serverless/common-custom-config.yaml):archLayer.env}
+    ver: ${file(./config/serverless/common-custom-config.yaml):archLayer.ver}
+#  provisionedConcurrency: ${file(./config/serverless/common-custom-config.yaml):provisionedConcurrency.default}
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-plugin-lambda-insights
+
+package:
+  individually: true
+  exclude:
+    - node_modules/**
+    - owasp-data/**
+    - owasp-dependency-check/**
+    - .scannerwork/**
+    - npm-cache/**
+    - coverage/**
+
+functions: ${file(config/serverless/functions.${self:custom.functionsFile}.yaml)}

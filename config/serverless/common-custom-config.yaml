@@ -1,0 +1,84 @@
+# API Gateway environment
+environments:
+  DESA: desa
+  TEST: test
+  MOCK: mock
+  PROD: prod
+
+# Used by AWS Lambda layers
+archLayer:
+  env:
+    DESA: DEV
+    TEST: DEV
+    PROD: PROD
+  ver:
+    DESA: 6
+    TEST: 6
+    PROD: 3
+
+# Regions code and abbreviation
+regions:
+  code:
+    DESA: us-east-2
+    TEST: us-east-2
+    MOCK: us-east-2
+    PROD: us-east-1
+  abrev:
+    DESA: UE2
+    TEST: UE2
+    MOCK: UE2
+    PROD: UE1
+
+# Account id
+accountId: 477542548955
+
+# Deployement bucket
+deploymentBucket:
+  DESA: ue1stgdesaas3prv001
+  TEST: ue1stgdesaas3prv001
+  MOCK: ue1stgdesaas3prv001
+  PROD: ue2stgas3pases001
+
+# Lambda's role
+role:
+  DESA: arn:aws:iam::${self:custom.accountId}:role/UE1SEGDESAIAMPCA001
+  TEST: arn:aws:iam::${self:custom.accountId}:role/UE1SEGDESAIAMPCA001
+  MOCK: TODOROLE
+  PROD: arn:aws:iam::${self:custom.accountId}:role/ROLE_BUSINESS_APIS_PROD
+
+# VPCs
+vpc:
+  DESA:
+    securityGroupIds:
+      - sg-026f3940c859a393a
+    subnetIds:
+      - subnet-f921f883
+      - subnet-da616897
+      - subnet-942af3ee
+      - subnet-eb676ea6
+  TEST:
+    securityGroupIds:
+      - sg-026f3940c859a393a
+    subnetIds:
+      - subnet-f921f883
+      - subnet-da616897
+      - subnet-942af3ee
+      - subnet-eb676ea6
+  PROD:
+    securityGroupIds:
+      - sg-0fb1268fcb72db415
+    subnetIds:
+      - subnet-0218d3847c8efbb21
+      - subnet-005ecb1c965b8f050
+      - subnet-07de999eb84c820e9
+      - subnet-092f4ced710a9c6a4
+      - subnet-0e62fbf1acf0991cb
+      - subnet-069dbcee9707128ea
+      - subnet-0e1de34ed4994b579
+
+# Aprovisionamiento de lambdas
+provisionedConcurrency:
+  default:
+    DESA: 1
+    TEST: 2
+    PROD: 5

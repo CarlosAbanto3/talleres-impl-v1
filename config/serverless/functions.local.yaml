@@ -1,0 +1,20 @@
+# Lista de todas las functions
+vehicular:
+  handler: src/talleres/App.handler
+  events:
+    - http:
+        path: /deducible
+        method: post
+        integration: lambda
+        authorizer: ${self:custom.authorizer}
+        cors:
+          ${file(config/serverless/http-cors.yaml)}
+        request:
+          parameters:
+            querystrings:
+              tipo: true
+              valor: true
+          template:
+            application/json: ${file(config/serverless/request/deducible.vm)}
+        response:
+          ${file(config/serverless/http-response.yaml)}

@@ -1,0 +1,29 @@
+#El ID debe ser el que esta en el diseño de API
+x-rimac-api-id: 5354ea66-1700-44ed-88a0-29c2e771a3a9
+components:
+  securitySchemes:
+    sigv4:
+      x-custom-value1: awsSigv4
+paths:
+  /siniestros:
+    get:
+      x-rimac-integration:
+        function: "${self:custom.regions.abrev.${opt:stage}}COM${opt:stage}ARQIMPLV1"
+        type: "aws"
+        requestTemplates:
+          application/json: $$file:../config/serverless/request/buscarSiniestro.vm
+        responses:
+          default:
+            statusCode: "200"
+            responseTemplates:
+              application/json: $$file:../config/serverless/response.vm
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.strinct-transport-security: "'max-age=31536000; includeSubDomains'"
+              method.response.header.x-frame-options: "'SAMEORIGIN'"
+              method.response.header.referrer-policy: "'no-referrer-when-downgrade'"
+              method.response.header.x-content-type-options: "'nosniff'"
+              method.response.header.x-xss-protection: "'1; mode=block'"
+    x-rimac-cors:
+      origin: "*"
+      headers: "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent"
